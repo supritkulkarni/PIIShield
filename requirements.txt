@@ -5,3 +5,4 @@ pytest
 cryptography
 pandas
 python-multipart
+httpx
