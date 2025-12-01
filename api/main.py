@@ -8,7 +8,7 @@ app = FastAPI()
 transformer = DataTransformer()
 audit = AuditLogger()
 
-@app.get("/health")
+@app.get("/health")     # Decorating health checks
 def health_check():
     return {"status": "ok"}
 
