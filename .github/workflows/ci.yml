@@ -16,11 +16,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: pip install -r requirements.txt
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-      - run: pytest --maxfail=1 --disable-warnings -q
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - run: docker build --platform=linux/amd64 -t secure-transform .
+      - name: Run tests
+        run: pytest --maxfail=1 --disable-warnings -q
+
+      - name: Build Docker image for test (amd64)
+        run: |
+          docker build --platform=linux/amd64 \
+            -t secure-transform \
+            -f infra/Dockerfile .
 
   deploy:
     needs: build-test
