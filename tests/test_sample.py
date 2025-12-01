@@ -3,10 +3,12 @@ from core.transformer import DataTransformer
 
 def test_sample_csv():
     df = pd.read_csv("data/sample.csv")
+    original_email = df["email"].iloc[0]
+
     transformer = DataTransformer()
     anonymized = transformer.anonymize(df)
 
-    # Ensure anonymization happened
-    assert anonymized["email"].iloc[0] != df["email"].iloc[0]
+    assert anonymized["email"].iloc[0] != original_email
     assert anonymized["phone"].iloc[1].startswith("XXX-XXX-")
     assert anonymized["dob"].iloc[2].endswith("s")
+
