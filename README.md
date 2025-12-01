@@ -1,3 +1,6 @@
+
+[![CI/CD](https://github.com/<supritkulkarni/PIIShield/actions/workflows/ci.yml/badge.svg)](https://github.com/supritkulkarni/PIIShield/actions/workflows/ci.yml)
+
 # Secure Data Transformation Service
 
 A Python + FastAPI service that ingests raw CSV/JSON datasets, sanitizes PII, and outputs anonymized data.
