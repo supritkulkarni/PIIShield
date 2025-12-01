@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-python-multipart
-pandas
-cryptography
+pydantic
 pytest
+cryptography
+pandas
+python-multipart
