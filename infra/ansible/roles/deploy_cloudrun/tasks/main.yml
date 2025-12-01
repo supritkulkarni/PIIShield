@@ -1,0 +1,8 @@
+---
+- name: Deploy service to CloudRun
+  command: >
+    gcloud run deploy {{ service_name }}
+    --image {{ image_name }}
+    --platform managed
+    --region {{ region }}
+    --allow-unauthenticated

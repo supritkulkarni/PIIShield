@@ -1,0 +1,7 @@
+---
+- name: Authenticate with GCP
+  command: gcloud auth activate-service-account --key-file={{ lookup('env','GOOGLE_APPLICATION_CREDENTIALS') }}
+  register: auth_result
+
+- debug:
+    msg: "Authenticated with GCP project {{ project_id }}"

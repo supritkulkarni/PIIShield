@@ -1,0 +1,58 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - run: pytest --maxfail=1 --disable-warnings -q
+
+      - run: docker build --platform=linux/amd64 -t secure-transform .
+
+  deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'   # only deploy on main branch
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: secure-transform-service
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker europe-west2-docker.pkg.dev --quiet
+
+      - name: Build Docker image (amd64)
+        run: |
+          docker build --platform=linux/amd64 \
+            -t europe-west2-docker.pkg.dev/secure-transform-service/secure-transform-repo/secure-transform:latest \
+            -f infra/Dockerfile .
+
+      - name: Push Docker image
+        run: docker push europe-west2-docker.pkg.dev/secure-transform-service/secure-transform-repo/secure-transform:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy secure-transform \
+            --image europe-west2-docker.pkg.dev/secure-transform-service/secure-transform-repo/secure-transform:latest \
+            --platform managed \
+            --region europe-west2 \
+            --allow-unauthenticated

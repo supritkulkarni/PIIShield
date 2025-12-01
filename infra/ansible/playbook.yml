@@ -1,0 +1,14 @@
+---
+- name: Deploy Secure Data Transformation Service to GCP CloudRun
+  hosts: localhost
+  connection: local
+  vars:
+    project_id: "secure-transform-service"
+    region: "europe-west2"   # London region
+    service_name: "secure-transform"
+    image_name: "europe-west2-docker.pkg.dev/{{ project_id }}/secure-transform-repo/secure-transform:latest"
+
+  roles:
+    - gcp_auth
+    - build_image
+    - deploy_cloudrun

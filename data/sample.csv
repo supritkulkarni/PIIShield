@@ -1,0 +1,4 @@
+name,email,phone,dob,address,account_number
+Alice Smith,alice.smith@example.com,5551234567,1990-05-14,123 Main St,ACC123456
+Bob Jones,bob.jones@example.com,5559876543,1985-09-20,456 Oak Ave,ACC987654
+Charlie Brown,charlie.brown@example.com,5551112222,1978-12-01,789 Pine Rd,ACC111222
